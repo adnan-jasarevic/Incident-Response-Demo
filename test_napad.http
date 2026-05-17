@@ -1,0 +1,17 @@
+### Uspješna prijava (Normalan događaj)
+POST http://localhost:5085/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password123"
+}
+
+### Neuspješna prijava (Sigurnosni događaj - Klikni 5 puta da simuliraš napad)
+POST http://localhost:5085/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "pogresnalozinka"
+}

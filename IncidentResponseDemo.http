@@ -1,0 +1,6 @@
+@IncidentResponseDemo_HostAddress = http://localhost:5085
+
+GET {{IncidentResponseDemo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
