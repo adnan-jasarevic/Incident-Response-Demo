@@ -1,6 +1,30 @@
-@IncidentResponseDemo_HostAddress = http://localhost:5085
+@host = http://localhost:5085
 
-GET {{IncidentResponseDemo_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. Successful login (200, normal event)
+POST {{host}}/api/auth/login
+Content-Type: application/json
 
-###
+{
+  "username": "admin",
+  "password": "password123"
+}
+
+### 2. Failed login (401, security event). Send it 5 times to simulate an attack.
+# The 5th failure is escalated to a Critical incident and the IP is locked out.
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "wrong-password"
+}
+
+### 3. Login while locked out (429 with a Retry-After header)
+# Even the correct password is refused until the lockout expires.
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password123"
+}
