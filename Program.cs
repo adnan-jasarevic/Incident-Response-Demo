@@ -1,22 +1,21 @@
 using IncidentResponseDemo.Services;
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// podesavanje seriloga za strukturirano sigurnosno logiranje u fajl
+// Structured security logging to the console and a daily rolling file.
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File("incident_logs.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.File("security_incidents.log", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
+var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<IncidentTrackerService>(); 
+builder.Services.Configure<BruteForceOptions>(builder.Configuration.GetSection(BruteForceOptions.SectionName));
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton<IncidentTrackerService>();
 
 var app = builder.Build();
 
-app.UseAuthorization();
 app.MapControllers();
-
 app.Run();
